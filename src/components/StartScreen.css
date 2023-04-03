@@ -6,3 +6,15 @@
     margin-bottom: 2em;
     color: #ecfa00;
 }
+
+@media only screen and (max-width: 414px) {
+    .start{
+        margin-top: 50%;
+    }
+    .start h1{
+      font-size: 3em;
+    }
+    .start p{
+        font-size: 1.5em;
+      }
+  }

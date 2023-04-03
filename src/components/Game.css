@@ -45,3 +45,19 @@
     margin-right: 1em;
 
 }
+
+@media only screen and (max-width: 414px) {
+    .letter,.blankSquare, .letterContainer input {
+        font-size: 20px;
+        width: 25px;
+        height: 25px;
+    }
+    .wordContainer{
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+    .points {
+        font-size: 2em;
+    }
+  }
