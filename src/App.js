@@ -35,7 +35,7 @@ function App() {
   const [wrongLetters, setWrongLetters] = useState([]);
   // Número de tentativas do meu usuario
   const [guesses, setGuesses] = useState(guessesNumber);
-  const [score, setScore] = useState();
+  const [score, setScore] = useState(50);
 
 
   const pickWordAndCategory = () => {
@@ -137,7 +137,10 @@ function App() {
         guesses={guesses}
         score={score}
       />}
-      {gameStage === 'end' && <GameOver retry={retry} />}
+      {gameStage === 'end' && <GameOver 
+      retry={retry} 
+      score={score}
+      />}
 
 
 
