@@ -35,10 +35,10 @@ function App() {
   const [wrongLetters, setWrongLetters] = useState([]);
   // Número de tentativas do meu usuario
   const [guesses, setGuesses] = useState(guessesNumber);
-  const [score, setScore] = useState(50);
+  const [score, setScore] = useState(0);
 
 
-  const pickWordAndCategory = () => {
+  const pickWordAndCategory = useCallback(() => {
 
     // Pick a random category
     const categories = Object.keys(words);
@@ -49,12 +49,15 @@ function App() {
     const word = words[category][Math.floor(Math.random() * words[category].length)]
 
     return { word, category };
-  }
+  },[words]);
 
 
 
   // Start de secret word game
-  const startGame = () => {
+  // Envolvemos o start com o usecallback para resolver o problema do useffect - Problema de função,
+  // com dependencia do useffect (Pode gerar um memory lick)
+  const startGame = useCallback(() => {
+    clearLetterStates();
 
     // Retornando uma palavra e categoria
     const { word, category } = pickWordAndCategory();
@@ -63,9 +66,6 @@ function App() {
     let wordLetters = word.split("");
     wordLetters = wordLetters.map((l) => l.toLowerCase());
 
-    console.log(word, category);
-    console.log(wordLetters);
-
     // fill states
     setPickedWord(word);
     setPickedCategory(category);
@@ -73,7 +73,7 @@ function App() {
 
 
     setGameStage(stages[1].name);
-  }
+  }, [pickWordAndCategory]);
 
   // Process the later input
   const verifyLetter = (letter) => {
@@ -102,6 +102,7 @@ function App() {
 
   }
 // Monitora um dado e executa uma ação a cada alteração desse dado
+// Check if guesses ended
   useEffect(() => {
     if(guesses <= 0 ){
       // reset all states
@@ -112,7 +113,19 @@ function App() {
 
   }, [guesses])
 
+  // check win condition
+  useEffect(() => {
+    // Palavra com letras unicas exemplo OVO - OV
+    const uniqueLetters = [...new Set(letters)];
 
+    // win condition
+    if((guessedLetters.length === uniqueLetters.length) && (gameStage===stages[1].name)){
+      setScore((actualScore) => (actualScore+=100));
+      // restart the game with the new word
+      startGame();
+
+    }
+  }, [guessedLetters, letters, startGame])
 
 
   // retry game
@@ -141,8 +154,6 @@ function App() {
       retry={retry} 
       score={score}
       />}
-
-
 
     </div>
   );
